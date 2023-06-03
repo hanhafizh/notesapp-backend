@@ -6,4 +6,6 @@ const routes = [
   },
 ];
 
+const { addNoteHandler } = require("./handler");
+
 module.exports = routes;

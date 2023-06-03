@@ -23,13 +23,12 @@ const addNoteHandler = (request, h) => {
 
   if (isSuccess) {
     const response = h.response({
-      status: "success",
+      error: false,
       message: "Catatan berhasil ditambahkan",
-      data: {
-        noteId: id,
-      },
     });
-    response.code(201);
+
+    response.header("Access-Control-Allow-Origin", "*");
+
     return response;
   }
   const response = h.response({
@@ -39,3 +38,34 @@ const addNoteHandler = (request, h) => {
   response.code(500);
   return response;
 };
+
+const getAllNotesHandler = () => ({
+  status: "success",
+  data: {
+    notes,
+  },
+});
+
+const getNoteByIdHandler = (request, h) => {
+  const { id } = request.params;
+
+  const note = notes.filter((n) => n.id === id)[0];
+
+  if (note !== undefined) {
+    return {
+      status: "success",
+      data: {
+        note,
+      },
+    };
+  }
+
+  const response = h.response({
+    status: "fail",
+    message: "Catatan tidak ditemukan",
+  });
+  response.code(404);
+  return response;
+};
+
+module.exports = { addNoteHandler, getAllNotesHandler, getNoteByIdHandler };
